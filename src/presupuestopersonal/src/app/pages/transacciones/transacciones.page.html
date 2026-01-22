@@ -1,0 +1,68 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Presupuesto Personal</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Balance Total</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <h2 [style.color]="balance >= 0 ? 'green' : 'red'">
+        $ {{ balance }}
+      </h2>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-list>
+    <ng-container *ngFor="let fecha of (transaccionesPorFecha() | keyvalue)">
+
+      <ion-item-group>
+        <ion-item-divider>
+          <ion-label>{{ fecha.key }}</ion-label>
+        </ion-item-divider>
+
+        <ion-item *ngFor="let t of fecha.value">
+          <ion-label>
+            <h2>{{ t.categoria }} ({{ t.tipo }})</h2>
+            <p>{{ t.descripcion }}</p>
+          </ion-label>
+
+          <ion-badge [color]="t.tipo === 'ingreso' ? 'success' : 'danger'">
+            {{ t.tipo === 'ingreso' ? '+' : '-' }}{{ t.monto }}
+          </ion-badge>
+
+          <ion-button fill="clear" color="primary" (click)="editarTransaccion(t)">
+            ✏️
+          </ion-button>
+
+
+          <ion-button fill="clear" color="danger" (click)="eliminarTransaccion(t.id)">
+            🗑
+          </ion-button>
+        </ion-item>
+
+      </ion-item-group>
+
+    </ng-container>
+  </ion-list>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button>
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+
+    <ion-fab-list side="top">
+      <ion-fab-button color="success" (click)="agregarTransaccion('ingreso')">
+        <ion-icon name="arrow-up"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button color="danger" (click)="agregarTransaccion('gasto')">
+        <ion-icon name="arrow-down"></ion-icon>
+      </ion-fab-button>
+    </ion-fab-list>
+  </ion-fab>
+
+</ion-content>
